@@ -32,15 +32,25 @@ def validasi(b):
         err.append('Stok harus bilangan bulat >= 0.')
     return err
 
-def nilai(b):
-    return {
+def nilai_insert(b):
+    return (
+        b['id_buku'],
+        b['judul'],
+        b['pengarang'],
+        b['penerbit'] or None,
+        int(b['tahun_terbit']) if b['tahun_terbit'] else None,
+        int(b['stok']),
+    )
+
+def nilai_update(b):
+    return (
         b['judul'],
         b['pengarang'],
         b['penerbit'] or None,
         int(b['tahun_terbit']) if b['tahun_terbit'] else None,
         int(b['stok']),
         b['id_buku'],
-    }
+    )
 
 # ---------------- READ ----------------
 @bp.route('/')
@@ -67,7 +77,7 @@ def tambah():
             conn = get_db()
             try:
                 with conn.cursor() as cur:
-                    cur.execute('INSERT INTO buku (id_buku, judul, pengarang, penerbit, tahun_terbit, stok) VALUES (%s, %s, %s, %s, %s, %s)', nilai(buku))
+                    cur.execute('INSERT INTO buku (id_buku, judul, pengarang, penerbit, tahun_terbit, stok) VALUES (%s, %s, %s, %s, %s, %s)', nilai_insert(buku))
                 conn.commit()
                 flash('buku berhasil ditambahkan.', 'success')
                 return redirect(url_for('buku.index'))
@@ -98,7 +108,7 @@ def edit(id_buku):
         if not errors:
             try:
                 with conn.cursor() as cur:
-                    cur.execute('UPDATE buku SET judul=%s, pengarang=%s, penerbit=%s, tahun_terbit=%s, stok=%s WHERE id_buku=%s', nilai(buku))
+                    cur.execute('UPDATE buku SET judul=%s, pengarang=%s, penerbit=%s, tahun_terbit=%s, stok=%s WHERE id_buku=%s', nilai_update(buku))
                 conn.commit()
                 flash('buku berhasil diperbarui.', 'success')
                 return redirect(url_for('buku.index'))
@@ -109,7 +119,7 @@ def edit(id_buku):
                 else:
                     raise
 
-        return render_template('buku/form.html', buku=buku, errors=errors, mode='edit')
+    return render_template('buku/form.html', buku=buku, errors=errors, mode='edit')
 
 # ---------------- DELETE ----------------
 @bp.route('/<id_buku>/hapus', methods=['POST'])
@@ -129,4 +139,5 @@ def hapus(id_buku):
             flash('buku tidak dapat dihapus karena masih digunakan di peminjaman.', 'danger')
         else:
             raise
+        
     return redirect(url_for('buku.index'))
