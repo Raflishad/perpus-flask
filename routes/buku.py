@@ -1,7 +1,7 @@
 import re
 
 import pymysql
-from flask import Blueprint, render_template, request, redirect, url_for, flash, abort, current_app, g
+from flask import Blueprint, render_template, request, redirect, url_for, flash, abort
 
 from db import get_db
 
@@ -51,7 +51,7 @@ def index():
             cur.execute('SELECT * FROM buku WHERE judul LIKE %s OR pengarang LIKE %s ORDER BY id_buku', (f'%{q}%', f'%{q}%'))
         else:
             cur.execute('SELECT * FROM buku ORDER BY id_buku')
-        data = cur.fetchall()
+        daftar = cur.fetchall()
     return render_template('buku/index.html', daftar=daftar, q=q)
 
 # ---------------- CREATE ----------------

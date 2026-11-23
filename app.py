@@ -2,7 +2,7 @@ from flask import Flask, redirect, url_for
 
 import db
 from config import config
-from routes.buku import buku_bp
+from routes.buku import bp as buku_bp
 from routes.peminjaman import bp as peminjaman_bp
 
 def create_app():
