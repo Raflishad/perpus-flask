@@ -5,10 +5,10 @@ def get_db():
     if 'db' not in g:
         cfg = current_app.config
         g.db = pymysql.connect(
-            host=cfg['localhost'],
-            user=cfg['root'],
-            password=cfg[''],
-            database=cfg['db_perpustakaan_flask'],
+            host=cfg['DB_HOST'],
+            user=cfg['DB_USER'],
+            password=cfg['DB_PASSWORD'],
+            database=cfg['DB_NAME'],
             charset='utf8mb4',
             cursorclass=pymysql.cursors.DictCursor,
             autocommit=False
